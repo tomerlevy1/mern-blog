@@ -1,15 +1,17 @@
 import bcryptjs from 'bcryptjs';
 import User from '../models/user.model.js';
+import { errorHandler } from '../utils/errorHandler.js';
 
 /**
  * @param {import("express").Request} req
  * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
  */
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
   const { username, password, email } = req.body;
 
   if (!username || !password || !email) {
-    return res.status(400).json({ message: 'Bad Request' });
+    return next(errorHandler(400, 'All fields are required'));
   }
 
   try {
@@ -24,10 +26,7 @@ export const signup = async (req, res) => {
     await user.save();
     return res.sendStatus(201);
   } catch (error) {
-    // TODO: check the type of error and return the appropriate status code
-    return res
-      .status(500)
-      .json({ message: error.message, error: 'Internal Server Error' });
+    return next(error);
   }
 };
 
