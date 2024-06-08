@@ -1,6 +1,7 @@
 import bcryptjs from 'bcryptjs';
 import User from '../models/user.model.js';
 import { errorHandler } from '../utils/errorHandler.js';
+import jwt from 'jsonwebtoken';
 
 /**
  * @param {import("express").Request} req
@@ -30,7 +31,38 @@ export const signup = async (req, res, next) => {
   }
 };
 
-export const signin = (req, res) => {
-  const body = req.body;
-  res.json(body);
+/**
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ */
+export const signin = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return next(errorHandler(400, 'All fields are required'));
+  }
+
+  try {
+    const validUser = await User.findOne({ email });
+    if (!validUser) {
+      return next(errorHandler(404, 'Invalid credentials'));
+    }
+
+    const isValidPassword = await bcryptjs.compare(
+      password,
+      validUser.password,
+    );
+    if (!isValidPassword) {
+      return next(errorHandler(401, 'Invalid credentials'));
+    }
+
+    const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
+
+    // const { password, ...user } = validUser._doc;
+    delete validUser._doc.password;
+    return res.status(200).cookie('token', token).json(validUser);
+  } catch (error) {
+    return next(error);
+  }
 };

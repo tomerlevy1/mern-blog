@@ -56,6 +56,7 @@ const SignUp = () => {
 
       navigate('/sign-in');
     } catch (error) {
+      console.error(error);
       setErrorMessage('Something went wrong');
     } finally {
       setLoading(false);
