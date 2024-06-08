@@ -2,5 +2,6 @@
   "compilerOptions": {
     "moduleResolution": "nodenext", // <- Necessary to get imports with .js
   },
+  "include": ["server/**/*"],
   "exclude": ["node_modules"]
 }
