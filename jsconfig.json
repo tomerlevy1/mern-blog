@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "moduleResolution": "nodenext", // <- Necessary to get imports with .js
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   },
   "include": ["server/**/*"],
   "exclude": ["node_modules"]
