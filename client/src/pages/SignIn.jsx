@@ -7,6 +7,7 @@ import {
   signInStart,
   signInSuccess,
 } from '../redux/user/userSlice';
+import OAuth from '../components/OAuth';
 
 const debounce = (fn, delay) => {
   let timer = null;
@@ -109,6 +110,7 @@ const SignIn = () => {
             >
               {!loading ? 'Sign In' : <Spinner></Spinner>}
             </Button>
+            <OAuth />
           </form>
           <div className="flex gap-2 text-sm mt-5">
             <span>Don't have an account?</span>
